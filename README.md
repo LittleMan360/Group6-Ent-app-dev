@@ -23,6 +23,7 @@ Our application will be developed into with three layers:
       - JSON-based endpoints for integration
 
 ## Storyboard (Screen Mockups)
+<img width="1536" height="1024" alt="story board images" src="https://github.com/user-attachments/assets/dd29a3eb-91fe-4023-b5c7-4aeb3f7ef472" />
 
 
 ## Functional Requirements 
