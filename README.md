@@ -24,7 +24,8 @@ Our application will be developed into with three layers:
 
 ## Storyboard (Screen Mockups)
 
-## Functional Requirements
+
+## Functional Requirements 
 
 ## Class Diagram
 
@@ -32,20 +33,23 @@ Our application will be developed into with three layers:
 
 ## Scrum Roles
 - **Dalton Towe** - Product Owner, Scrum Master, GitHub Admin
-       - Manages backlog & GitHub project board
-       - Facilitates sprint planning & standups
-       - Ensures timely commits & merges
+    - Manages backlog & GitHub project board
+    - Facilitates sprint planning & standups
+    - Ensures timely commits & merges
+  
 - **Tyler Kemp** - User Interface (UI) Developer
-       - Build responsive front-end (login, dashboard, forms)
-       - Consumes backend JSON API
+    - Build responsive front-end (login, dashboard, forms)
+    - Consumes backend JSON API
+  
 - **India Hardin** - Business Logic & Persistance Specialist
-       - Designs interfaces, stubs, and actual implementation
-       - Builds services and DAOs
-       - Handles database integration
+    - Designs interfaces, stubs, and actual implementation
+    - Builds services and DAOs
+    - Handles database integration
+  
 - **All Team Members** - Quality Assurance (QA)
-       - Write unit tests using Given/When/Then
-       - Perform code reviews
-       - Run functional testing before merging
+    - Write unit tests using Given/When/Then
+    - Perform code reviews
+    - Run functional testing before merging
 
 ## GitHub Project Link
 [Insert Repository Link Here]
