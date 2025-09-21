@@ -46,6 +46,11 @@ Our application will be developed into with three layers:
     - Designs interfaces, stubs, and actual implementation
     - Builds services and DAOs
     - Handles database integration
+
+- **Melissa Manzon** - DevOps/Support/Flex
+    - Provides cross-role support
+    - Helps with integration and documentation
+    - Ensures consistency among layers
   
 - **All Team Members** - Quality Assurance (QA)
     - Write unit tests using Given/When/Then
