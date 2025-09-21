@@ -15,8 +15,8 @@ It provides:
 
 Our application will be developed into with three layers:
 
-- **User Interface (UI):** 
-      - Responsive, user-friendly front end
+- **User Interface (UI):**
+       - Responsive, user-friendly front end  
 - **Businees Logic & Persistance:**
       - Core services and data storage 
 - **REST API:**
@@ -66,3 +66,5 @@ Our application will be developed into with three layers:
 - **Time:** Thursdays, 8:00 PM
 - **Platform:** Microsoft Teams
 - **Link:** Will be shared via email to team members
+
+[Group Meeting at 8 PM Thursdays Eastern on Teams](https://teams.microsoft.com/l/meetup-join/19%3ameeting_N2Q3NDRmOTUtMGY5ZS00ODc2LThhMzAtMmFlMWRmNGI1YzBk%40thread.v2/0?context=%7b%22Tid%22%3a%22f5222e6c-5fc6-48eb-8f03-73db18203b63%22%2c%22Oid%22%3a%224c08cbbc-a21f-4686-b074-927bde5f94c0%22%7d)
