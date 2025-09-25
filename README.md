@@ -23,7 +23,6 @@ Our application will be developed into with three layers:
       - JSON-based endpoints for integration
 
 ## Storyboard (Screen Mockups)
-<img width="1536" height="1024" alt="story board images" src="https://github.com/user-attachments/assets/dd29a3eb-91fe-4023-b5c7-4aeb3f7ef472" />
 
 
 ## Functional Requirements 
@@ -33,9 +32,9 @@ Our application will be developed into with three layers:
 ## JSON Schema
 
 ## Scrum Roles
-- **Dalton Towe** - Product Owner, Scrum Master, GitHub Admin
-    - Manages backlog & GitHub project board
-    - Facilitates sprint planning & standups
+- **Dalton Towe** - Product Owner,  GitHub Admin, Flex
+    - Provides cross-role support
+    - Helps with integration and documentation
     - Ensures timely commits & merges
   
 - **Tyler Kemp** - User Interface (UI) Developer
@@ -47,9 +46,9 @@ Our application will be developed into with three layers:
     - Builds services and DAOs
     - Handles database integration
 
-- **Melissa Manzon** - DevOps/Support/Flex
-    - Provides cross-role support
-    - Helps with integration and documentation
+- **Melissa Manzon** - Scrum Master and DevOps
+    - Manages backlog & GitHub project board
+    - Faciltates sprint planning & standup
     - Ensures consistency among layers
   
 - **All Team Members** - Quality Assurance (QA)
@@ -58,7 +57,7 @@ Our application will be developed into with three layers:
     - Run functional testing before merging
 
 ## GitHub Project Link
-[Insert Repository Link Here]
+https://github.com/LittleMan360/Group6-Ent-app-dev
 
 ## Scrum/Kanban Board
 - **Milestone #1:**
