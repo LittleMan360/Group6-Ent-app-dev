@@ -31,6 +31,39 @@ Our application will be developed into with three layers:
 
 ## JSON Schema
 
+Budget Schema
+>{
+>  "type": "object",
+>  "properties": {
+>    "monthlyGoal": { "type": "integer" },
+>    "items": {
+>      "type": "array",
+>      "items": {
+>        "type": "object",
+>        "properties": {
+>          "type": { "type": "string" },
+>          "name": { "type": "string" },
+>          "amount": { "type": "integer" }
+>        }
+>      }
+>    }
+>  }
+>}
+
+Goal Schema
+>{
+>  "type": "object",
+>  "properties": {
+>    "name": { "type": "string" },
+>    "targetAmount": { "type": "integer" },
+>    "timeframeMonths": { "type": "integer" },
+>    "initialSavings": { "type": "integer" },
+>    "monthlyContribution": { "type": "integer" },
+>    "interestRatePercent": { "type": "number" },
+>    "frequency": { "type": "string" }
+>  }
+>}
+
 ## Scrum Roles
 - **Dalton Towe** - Product Owner,  GitHub Admin, Flex
     - Provides cross-role support
