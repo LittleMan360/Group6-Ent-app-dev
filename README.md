@@ -92,8 +92,10 @@ Goal Schema
 ## GitHub Project Link
 https://github.com/LittleMan360/Group6-Ent-app-dev
 
+https://github.com/users/LittleMan360/projects/3
+
 ## Scrum/Kanban Board
-- **Milestone #1:**
+- **Milestone #1: Define Service Endpoints, Basic UI, Write Unit Tests**
     - Set up project skeleton
     - Login functionality
     - Expense entry prototype
