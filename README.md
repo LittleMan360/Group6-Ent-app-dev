@@ -24,7 +24,7 @@ Our application will be developed into with three layers:
 
 The system will be based on this structured architecture
 
-User Interface Layer - The project is created by InTelliJ IDEA with Thymeleaf template engine, for developing a clean and responsive design
+User Interface Layer - The project is created by IntelliJ IDEA with Thymeleaf template engine, for developing a clean and responsive design
 
 Business Logic Layer - Involving Java Service Classes for dealing with validation, managing calculations, organizing workflows
 
