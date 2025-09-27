@@ -151,6 +151,7 @@ https://github.com/users/LittleMan360/projects/3
 - **Tasks In GitHub Projects**
    - Create ReactUI skeleton
    - SetUp Spring Boot Backend
+   - Define DTOs and JSON schema
    - Configure GitHub Actions for Continuous Integration/Continuous Deployment 
 
 **Future Milestones (#2, 3) will be defined during sprint planning.**
