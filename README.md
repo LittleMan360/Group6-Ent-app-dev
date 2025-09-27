@@ -30,7 +30,7 @@ Business Logic Layer - Involving Java Service Classes for dealing with validatio
 
 Persistance Layer- Involving Java Persistance API using an Object-Relational Mapping called Hibernate to connect MySQL database
 
-Integration Layer that includes REST endpoints and JSON endpoints for permiting compatibility with other systems
+Integration Layer - Includes REST endpoints and JSON endpoints for permiting compatibility with other systems
 
 ## Storyboard (Screen Mockups)
 
