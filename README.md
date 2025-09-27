@@ -24,11 +24,11 @@ Our application will be developed into with three layers:
 
 The system will be based on this structured architecture
 
-User Interface created by using Spring Boot framework and Thymeleaf template engine, for developing a clean and responsive design
+User Interface Layer - The project is created by InTelliJ IDEA with Thymeleaf template engine, for developing a clean and responsive design
 
-Business Logic Layer involving Java Service Classes for dealing with validation, managing calculations, organizing workflows
+Business Logic Layer - Involving Java Service Classes for dealing with validation, managing calculations, organizing workflows
 
-Persistance Layer involving Java Persistance API using an Object-Relational Mapping called Hibernate to connect MySQL database
+Persistance Layer- Involving Java Persistance API using an Object-Relational Mapping called Hibernate to connect MySQL database
 
 Integration Layer that includes REST endpoints and JSON endpoints for permiting compatibility with other systems
 
