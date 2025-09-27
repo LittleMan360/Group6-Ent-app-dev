@@ -22,6 +22,16 @@ Our application will be developed into with three layers:
 - **REST API:**
       - JSON-based endpoints for integration
 
+The system will be based on this structured architecture
+
+User Interface created by using Spring Boot framework and Thymeleaf template engine, for developing a clean and responsive design
+
+Business Logic Layer involving Java Service Classes for dealing with validation, managing calculations, organizing workflows
+
+Persistance Layer involving Java Persistance API using an Object-Relational Mapping called Hibernate to connect MySQL database
+
+Integration Layer that includes REST endpoints and JSON endpoints for permiting compatibility with other systems
+
 ## Storyboard (Screen Mockups)
 
 
