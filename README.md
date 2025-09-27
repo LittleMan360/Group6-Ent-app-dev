@@ -24,7 +24,7 @@ Our application will be developed into with three layers:
 
 The system will be based on this structured architecture
 
-User Interface Layer - The project is created by IntelliJ IDEA with Thymeleaf template engine, for developing a clean and responsive design
+User Interface Layer - Spring Boot with the Thymeleaf template engine. for developing a clean and responsive design. Also, the JavaScript library React could be included when working with the User Interface layer.
 
 Business Logic Layer - Involving Java Service Classes for dealing with validation, managing calculations, organizing workflows
 
@@ -147,6 +147,11 @@ https://github.com/users/LittleMan360/projects/3
     - Set up project skeleton
     - Login functionality
     - Expense entry prototype
+
+- **Tasks In GitHub Projects**
+   - Create ReactUI skeleton
+   - SetUp Spring Boot Backend
+   - Configure GitHub Actions for Continuous Integration/Continuous Deployment 
 
 **Future Milestones (#2, 3) will be defined during sprint planning.**
 
