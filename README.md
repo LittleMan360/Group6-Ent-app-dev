@@ -39,13 +39,13 @@ As a Budgeting User
 
 **Given** a new month with no expenses and a total budget of $2,000 split as: Food $500, Housing $1,000, Transport $200, Misc $300 
 
-** When** I view the dashboard 
+**When** I view the dashboard 
  
-** Then** overall remaining = $2,000 and each category shows its initial remaining amount 
+**Then** overall remaining = $2,000 and each category shows its initial remaining amount 
 
 **Given** an existing month with the same budget and recorded expenses: Food $120, Transport $50 
 
-** When** I view the dashboard 
+**When** I view the dashboard 
  
  **Then** overall remaining = $2,000 − $170 = $1,830 and Food remaining = $380, Transport remaining = $150 
 
@@ -58,7 +58,7 @@ As a Budgeting User
 
 **Given** I reduce a category allocation below the already-spent amount (e.g., Food spent $200, I set Food budget to $150) 
 
-** When** I save the budget 
+**When** I save the budget 
  
  **Then** the system allows the save only if an override flag is set; otherwise it blocks the change with: “Allocation cannot be less than already spent” 
  
