@@ -131,6 +131,7 @@ As a Budgeting User
  **Then** both files are produced with identical totals and consistent rounding (two decimal places) and include a generation timestamp ## Class Diagram
 
 ## Class Diagram
+[<img width="1536" height="1024" alt="image" src="https://i.imgur.com/PEoN0v0.png" />](https://imgur.com/a/mvoUUc3)
 (https://i.imgur.com/PEoN0v0.png)            
 ## JSON Schema
 
