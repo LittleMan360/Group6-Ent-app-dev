@@ -131,45 +131,7 @@ As a Budgeting User
  **Then** both files are produced with identical totals and consistent rounding (two decimal places) and include a generation timestamp ## Class Diagram
 
 ## Class Diagram
-class CreateBudget {
-    - MonthlyGoal : Decimal
-    - IncomeSource : String
-    - IncomeAmount : Decimal
-    - ExpenseCategory : String
-    - ExpenseAmount : Decimal
-}
-
-class FinancialGoals {
-    - GoalName : String
-    - TargetAmount : Decimal
-    - Timeframe : Date
-    - InitialSavings : Decimal
-    - MonthlyContribution : Decimal
-    - InterestRate : Decimal
-    - CompoundFrequency : Date
-}
-
-class DebtManagement {
-    - CurrentDebt : Decimal
-    - DebtGoal : String
-    - DebtTimeframe : Date
-    - DebtInterest : Decimal
-}
-
-class InvestmentTools {
-    - CurrentBalance : Decimal
-    - StockChooser : String
-    - InvestmentGoal : Decimal
-    - InvestmentTimeframe : Date
-}
-
-class TaxPreparation {
-    - TaxRate : Decimal
-    - CurrentDues : Decimal
-    - TaxDate : Date
-    - TaxPaymentGoal : String
-    - TaxTimeframe : Date
-}            
+(https://i.imgur.com/PEoN0v0.png)            
 ## JSON Schema
 
 Budget Schema
