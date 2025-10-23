@@ -1,0 +1,3 @@
+version: 2 # use CircleCI 2.0
+jobs: # a collection of steps
+   build: # runs net using Workflows must have a build entry point
