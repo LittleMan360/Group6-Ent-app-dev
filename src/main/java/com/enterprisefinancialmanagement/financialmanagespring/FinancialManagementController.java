@@ -3,33 +3,38 @@ package com.enterprisefinancialmanagement.financialmanagespring;
 import com.enterprisefinancialmanagement.financialmanagespring.dto.Budget;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@RestController
-@RequestMapping("/budget")
+@Controller
 public class FinancialManagementController {
 
-    @GetMapping
-    public ResponseEntity<List<Budget>> fetchAllBudgets() {
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+
+
+    /**
+     * Handle the root(/) endpoint and return a start page.
+     * @return
+     */
+    @RequestMapping("/")
+    public String index() {
+        return "dashboard";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Budget> fetchBudgetById(@PathVariable("id") String id) {
-        Budget budget = new Budget();
-        return new ResponseEntity<>(budget, HttpStatus.OK);
+    @GetMapping("/budget")
+    public ResponseEntity fetchAllBudegts() {
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    @GetMapping("/budget/{id}/")
+    public ResponseEntity fetchBudgetById(@PathVariable( "id") String id) {
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    @PostMapping(value="/budget", consumes="application/json", produces="application/json")
+    public Budget createBudget(@RequestBody Budget budget) {
+        return budget;
     }
 
-    @PostMapping(consumes="application/json", produces="application/json")
-    public ResponseEntity<Budget> createBudget(@RequestBody Budget budget) {
-        return new ResponseEntity<>(budget, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBudget(@PathVariable("id") String id) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/budget/{id}")
+    public ResponseEntity deleteBudget(@PathVariable("id") String id) {
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -1,19 +1,21 @@
 package com.enterprisefinancialmanagement.financialmanagespring.dto;
 
+
 import lombok.Data;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Data Transfer Object for Budget
- */
-@Data
-public class Budget {
+  /**
+  * Data Transfer Object
+  * Java class for Budget 
+  * @author Melissa Manzon
+  */
+public @Data
+class  Budget {
     private int budgetId;
-    private BigDecimal amount;
-    private String category;
     private String budgetName;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+
+
 }
