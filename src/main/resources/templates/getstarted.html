@@ -1,1 +1,21 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Started</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<section class="container">
+    <h1>Welcome to Financial Manager</h1>
+    <p>Manage your budgets efficiently with a simple dashboard and detailed reports.</p>
+
+    <div class="cta">
+        <a href="/dashboard" class="btn">Go to Dashboard</a>
+    </div>
+</section>
+
+</body>
+</html>
