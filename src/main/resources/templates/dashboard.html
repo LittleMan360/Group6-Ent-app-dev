@@ -1,17 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th=http://wwww.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Financial Management Dashboard</title>
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<h1>Track Your Expenses</h1>
 <body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<section class="container">
+    <h1>Dashboard</h1>
+
+    <form th:action="@{/saveBudget}" th:object="${specimen}" method="post" class="form">
+        <label>Name:</label>
+        <input type="text" th:field="*{budgetName}" placeholder="Enter budget name" required>
+
+        <label>Description:</label>
+        <input type="text" th:field="*{description}" placeholder="Describe your budget" required>
+
+        <label>Category:</label>
+        <input type="text" th:field="*{category}" placeholder="Category (e.g. Travel, Rent)" required>
+
+        <label>Amount:</label>
+        <input type="number" th:field="*{amount}" placeholder="Enter amount" required>
+
+        <label>Start Date:</label>
+        <input type="date" th:field="*{startDate}">
+
+        <label>End Date:</label>
+        <input type="date" th:field="*{endDate}">
+
+        <button type="submit" class="btn">Save Budget</button>
+    </form>
+
+    <h2>Saved Budgets</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${budgets}">
+            <td th:text="${b.budgetId}"></td>
+            <td th:text="${b.budgetName}"></td>
+            <td th:text="${b.description}"></td>
+            <td th:text="${b.category}"></td>
+            <td th:text="${b.amount}"></td>
+            <td th:text="${b.startDate}"></td>
+            <td th:text="${b.endDate}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 
 </body>
-<p th:text="${budget}" />
-<form action="#" th:action="@{/saveBudget}" th:object="{specimen}" method="GET">
-    <label>Description<</label><input type="text" name="description" th:field="{description}" />
-    <label>Budget</label><input type="text" name="budgetId" th:field="{budgetId}" />
-</form>
-<button>View Report</button>
 </html>

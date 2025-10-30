@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="navbar">
+    <nav class="navbar">
+        <div class="logo">💼 Financial Manager</div>
+        <ul class="nav-links">
+            <li><a href="/getstarted" th:classappend="${currentPage} == 'getstarted' ? 'active' : ''">Get Started</a></li>
+            <li><a href="/dashboard" th:classappend="${currentPage} == 'dashboard' ? 'active' : ''">Dashboard</a></li>
+            <li><a href="/report" th:classappend="${currentPage} == 'report' ? 'active' : ''">Report</a></li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
