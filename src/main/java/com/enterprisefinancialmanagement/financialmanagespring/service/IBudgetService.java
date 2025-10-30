@@ -9,4 +9,4 @@ public interface IBudgetService {
     Budget getBudgetById(String id);
     List<Budget> getAllBudgets();
     boolean deleteBudget(String id);
-}
+}--
