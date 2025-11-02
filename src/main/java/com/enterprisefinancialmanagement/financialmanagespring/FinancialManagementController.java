@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Controller for managing budget pages and dashboard.
+ * Handles form binding, view navigation, and demo logic.
+ * TODO: Move business logic (auto-increment, date defaults) to a service layer.
+ */
 
 @RestController
 @RequestMapping("/budget")
@@ -22,6 +27,10 @@ public class FinancialManagementController {
         Budget budget = new Budget();
         return new ResponseEntity<>(budget, HttpStatus.OK);
     }
+/**
+ * Handles submission of a budget form, sets ID and default dates,
+ * then adds budget to the in-memory list.
+ */
 
     @PostMapping(consumes="application/json", produces="application/json")
     public ResponseEntity<Budget> createBudget(@RequestBody Budget budget) {

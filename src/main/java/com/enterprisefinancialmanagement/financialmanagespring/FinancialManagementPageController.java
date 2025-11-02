@@ -1,5 +1,6 @@
 package com.enterprisefinancialmanagement.financialmanagespring;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +12,27 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for managing budget pages and dashboard.
+ * Handles form binding, view navigation, and demo logic.
+ * TODO: Move business logic (auto-increment, date defaults) to a service layer.
+ */
+/**
+ * Controller for managing the dashboard and budget pages.
+ * Contains methods to show dashboards and save/retrieve budgets.
+ */
 @Controller
 public class FinancialManagementPageController {
+    private static final Logger log = LoggerFactory.getLogger(FinancialManagementPageController.class);
 
     // In-memory list to store budgets
     private final List<Budget> budgetList = new ArrayList<>();
     private int nextBudgetId = 1; // auto-increment ID
-
+    /**
+     * Shows the dashboard page and populates the view model with budget data.
+     * @param model Spring Model object for passing attributes to the view.
+     * @return The dashboard HTML template.
+     */
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("specimen", new Budget()); // for form binding
@@ -25,6 +40,10 @@ public class FinancialManagementPageController {
         model.addAttribute("currentPage", "dashboard");
         return "dashboard"; // dashboard.html
     }
+/**
+ * Handles submission of a budget form, sets ID and default dates,
+ * then adds budget to the in-memory list.
+ */
 
     @PostMapping("/saveBudget")
     public String saveBudget(@ModelAttribute("specimen") Budget budget) {
@@ -40,7 +59,8 @@ public class FinancialManagementPageController {
         }
         // Add to the list
         budgetList.add(budget);
-        System.out.println("Saved budget: " + budget.getDescription());
+        log.info("Saved budget: {}", budget.getDescription());
+
         return "redirect:/dashboard";
     }
 
