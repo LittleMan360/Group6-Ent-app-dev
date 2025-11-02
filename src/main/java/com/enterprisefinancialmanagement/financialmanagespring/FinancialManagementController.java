@@ -4,6 +4,7 @@ import com.enterprisefinancialmanagement.financialmanagespring.dto.Budget;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -16,9 +17,11 @@ public class FinancialManagementController {
      * @return
      */
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("specimen", new Budget());
         return "dashboard";
     }
+
 
     @GetMapping("/budget")
     public ResponseEntity fetchAllBudegts() {

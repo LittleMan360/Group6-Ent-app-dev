@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th=http://wwww.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Financial Management Dashboard</title>
-</head>
-<h1>Track Your Expenses</h1>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Financial Management Dashboard</title>
+    </head>
+    <h1>Track Your Expenses</h1>
+    <body>
+    <p th:text="${budget}"></p>
+        <form th:action="@{/saveBudget}" th:object="${specimen}" method="get">
+            <label>Description<</label>
+            <input type="text" name="description" th:field="*{description}" />
 
-</body>
-<p th:text="${budget}" />
-<form action="#" th:action="@{/saveBudget}" th:object="{specimen}" method="GET">
-    <label>Description<</label><input type="text" name="description" th:field="{description}" />
-    <label>Budget</label><input type="text" name="budgetId" th:field="{budgetId}" />
-</form>
-<button>View Report</button>
+            <label>Budget</label>
+            <input type="text" name="budgetId" th:field="*{budgetId}" />
+
+            <button>View Report</button>
+        </form>
+    </body>
 </html>
