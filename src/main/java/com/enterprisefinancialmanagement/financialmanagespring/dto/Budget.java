@@ -16,6 +16,4 @@ class  Budget {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-
-
 }
