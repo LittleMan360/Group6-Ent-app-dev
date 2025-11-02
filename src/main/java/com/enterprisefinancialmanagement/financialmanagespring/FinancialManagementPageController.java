@@ -60,6 +60,7 @@ public class FinancialManagementPageController {
         budgetList.add(budget);
         log.info("Saved budget: {}", budget.getDescription());
 
+
         return "redirect:/dashboard";
     }
 
