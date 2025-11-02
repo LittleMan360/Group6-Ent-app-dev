@@ -35,15 +35,19 @@ public class BudgetServiceImpl implements IBudgetService {
     }
 
     @Override
+    public boolean delete(Long id) {
+        return store.remove(id) != null;
+    }
+
+    @Override
     public Budget create(Budget budget) {
+        if (budget == null) {
+            throw new IllegalArgumentException("Budget cannot be null");
+        }
         long id = seq.incrementAndGet();
         budget.setId(id);
         store.put(id, budget);
         return budget;
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return store.remove(id) != null;
-    }
 }
