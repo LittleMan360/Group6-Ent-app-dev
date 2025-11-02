@@ -1,6 +1,7 @@
 package com.enterprisefinancialmanagement.financialmanagespring.dto;
 
 
+import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
 import jakarta.validation.constraints.NotBlank;
@@ -12,8 +13,15 @@ import jakarta.validation.constraints.NotNull;
   * Java class for Budget 
   * @author Melissa Manzon
   */
-public @Data
-class  Budget {
+
+  @Entity
+  @Table(name = "budgets")
+  @Data
+public class  Budget {
+
+    //Id has an auto increment primary key
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int budgetId;
 
     //Budget name can't be blank or exceed 50 characters
