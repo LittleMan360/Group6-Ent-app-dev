@@ -13,14 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller for managing budget pages and dashboard.
- * Handles form binding, view navigation, and demo logic.
- * TODO: Move business logic (auto-increment, date defaults) to a service layer.
+ * Controller for managing budget and dashboard pages.
+ * Handles form binding, navigation, and demo business logic.
+ * TODO: In future, move core logic to service layer for better separation.
  */
-/**
- * Controller for managing the dashboard and budget pages.
- * Contains methods to show dashboards and save/retrieve budgets.
- */
+
 @Controller
 public class FinancialManagementPageController {
     private static final Logger log = LoggerFactory.getLogger(FinancialManagementPageController.class);
@@ -40,10 +37,12 @@ public class FinancialManagementPageController {
         model.addAttribute("currentPage", "dashboard");
         return "dashboard"; // dashboard.html
     }
-/**
- * Handles submission of a budget form, sets ID and default dates,
- * then adds budget to the in-memory list.
- */
+    /**
+     * Handles the submission of budget forms, auto-sets ID/dates, adds to list.
+     * @param budget The submitted budget information
+     * @return Redirects to dashboard after saving
+     */
+
 
     @PostMapping("/saveBudget")
     public String saveBudget(@ModelAttribute("specimen") Budget budget) {
