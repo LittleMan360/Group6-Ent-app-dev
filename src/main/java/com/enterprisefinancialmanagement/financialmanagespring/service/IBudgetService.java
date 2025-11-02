@@ -11,6 +11,4 @@ public interface IBudgetService {
     Budget createBudget(Budget budget);
     void deleteBudget(int id);
 
-
-
 }

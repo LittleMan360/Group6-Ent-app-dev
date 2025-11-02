@@ -6,7 +6,7 @@
     </head>
     <h1>Track Your Expenses</h1>
     <body>
-    <p th:text="${budget}"></p>
+        <p th:text="${budget}"></p>
         <form th:action="@{/saveBudget}" th:object="${specimen}" method="get">
             <label>Description<</label>
             <input type="text" name="description" th:field="*{description}" />

@@ -25,12 +25,12 @@ public class  Budget {
     private int budgetId;
 
     //Budget name can't be blank or exceed 50 characters
-      @NotBlank(message = "Budget name is required")
-      @Size(max = 50, message = "Budget cannot exceed 50 characters")
+    @NotBlank(message = "Budget name is required")
+    @Size(max = 50, message = "Budget cannot exceed 50 characters")
     private String budgetName;
 
     //Description is optional but cannot exceed 300 characters
-      @Size(max = 300, message = "Description cannot exceed 300 characters")
+    @Size(max = 300, message = "Description cannot exceed 300 characters")
     private String description;
 
     //Dates cannot be null

@@ -35,7 +35,7 @@ public class DatabaseSeeder {
                 budgetRepository.save(budget1);
                 budgetRepository.save(budget2);
 
-                System.out.println("Seeded budgets");
+                System.out.println("Seeded budgets"); //Will indicate in console if data is added correctly
             }
         };
     }
