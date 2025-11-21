@@ -43,5 +43,10 @@ public class TxnController {
     public List<Txn> list(@RequestParam UUID userId) {
         return txns.listForUser(userId);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable UUID id) {
+        txns.delete(id);
+    }
 }
 

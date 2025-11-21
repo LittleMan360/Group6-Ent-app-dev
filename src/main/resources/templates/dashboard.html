@@ -12,6 +12,8 @@
     <h1>Dashboard</h1>
 
     <form th:action="@{/saveBudget}" th:object="${specimen}" method="post" class="form">
+        <input type="hidden" th:field="*{budgetId}" />
+
         <label>Name:</label>
         <input type="text" th:field="*{budgetName}" placeholder="Enter budget name" required>
 
@@ -44,6 +46,7 @@
             <th>Amount</th>
             <th>Start</th>
             <th>End</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -55,6 +58,17 @@
             <td th:text="${b.amount}"></td>
             <td th:text="${b.startDate}"></td>
             <td th:text="${b.endDate}"></td>
+            <td>
+                <a th:href="@{|/budget/${b.budgetId}/edit|}" class="btn btn-sm btn-secondary">
+                    Edit
+                </a>
+                <form th:action="@{|/budget/${b.budgetId}/delete|}" method="post"
+                      style="display:inline-block; margin-left:4px;">
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        Delete
+                    </button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
