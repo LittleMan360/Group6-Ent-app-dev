@@ -37,7 +37,7 @@ public class FinancialManagementPageController {
         // All saved budgets (categories + amounts)
         List<Budget> allBudgets = budgets.findAll();
 
-        // 1) Total Allocated (we are calling this "totalSpent" in Scenario 1)
+        // 1) Total Allocated (we are calling this "totalAllocated" in Scenario 1)
         BigDecimal totalAllocated = allBudgets.stream()
                 .map(Budget::getAmount)
                 .filter(Objects::nonNull)
@@ -57,21 +57,21 @@ public class FinancialManagementPageController {
         List<Txn> monthTxns = txns.listForUserBetween(DEMO_USER, from, to);
 
         // Treat any NEGATIVE amount as an EXPENSE and group by category
-        Map<String, BigDecimal> spentByCategory = monthTxns.stream()
+        Map<String, BigDecimal> AllocatedByCategory = monthTxns.stream()
                 .filter(t -> t.getAmount() != null
                         && t.getAmount().compareTo(BigDecimal.ZERO) < 0)
                 .collect(Collectors.groupingBy(
                         Txn::getCategory,
                         Collectors.reducing(
                                 BigDecimal.ZERO,
-                                t -> t.getAmount().negate(), // -50 -> +50 spent
+                                t -> t.getAmount().negate(), // -50 -> +50 Allocated
                                 BigDecimal::add)
                 ));
 
         // Per-category section:
         //  - budget = allocation (limit for that category)
-        //  - spent = actual expenses for that category (from Txns)
-        //  - remaining = budget - spent
+        //  - Allocated = actual expenses for that category (from Txns)
+        //  - remaining = budget - Allocated
         //  - shareOfTotal = budget / totalBudgetLimit * 100
         List<DashboardSummary.CategorySummary> cats = new ArrayList<>();
         for (Budget b : allBudgets) {
@@ -81,11 +81,11 @@ public class FinancialManagementPageController {
             BigDecimal budgetAmount =
                     Optional.ofNullable(b.getAmount()).orElse(BigDecimal.ZERO);
 
-            BigDecimal spent = spentByCategory.getOrDefault(b.getCategory(), BigDecimal.ZERO);
-            BigDecimal remaining = budgetAmount.subtract(spent);
+            BigDecimal Allocated = AllocatedByCategory.getOrDefault(b.getCategory(), BigDecimal.ZERO);
+            BigDecimal remaining = budgetAmount.subtract(Allocated);
 
             cs.setBudget(budgetAmount);
-            cs.setSpent(spent);
+            cs.setAllocated(Allocated);
             cs.setRemaining(remaining);
 
             // How much of the total budget limit this category gets, in %
@@ -102,7 +102,7 @@ public class FinancialManagementPageController {
 
         DashboardSummary summary = new DashboardSummary();
         summary.setTotalBudget(totalBudget);           // total monthly budget limit
-        summary.setTotalSpent(totalAllocated);         // sum of category allocations (Scenario 1 meaning)
+        summary.setTotalAllocated(totalAllocated);         // sum of category allocations (Scenario 1 meaning)
         summary.setTotalRemaining(totalRemaining);     // leftover unallocated money
         summary.setCategories(cats);
 
@@ -190,7 +190,7 @@ public class FinancialManagementPageController {
             return "dashboard";
         }
 
-        // ---- Scenario 1.4: allocation < already spent (unless override) ----
+        // ---- Scenario 1.4: allocation < already Allocated (unless override) ----
         YearMonth month = YearMonth.now();
         LocalDate from = month.atDay(1);
         LocalDate to = month.atEndOfMonth();
@@ -199,7 +199,7 @@ public class FinancialManagementPageController {
                 .orElse("")
                 .trim();
 
-        BigDecimal spentInCategory = txns.listForUserBetween(DEMO_USER, from, to).stream()
+        BigDecimal AllocatedInCategory = txns.listForUserBetween(DEMO_USER, from, to).stream()
                 .filter(t -> t != null)
                 .filter(t -> t.getType() != null && t.getType() == Txn.Type.EXPENSE)
                 .filter(t -> {
@@ -214,9 +214,9 @@ public class FinancialManagementPageController {
 
         if (!override &&
                 budget.getAmount() != null &&
-                budget.getAmount().compareTo(spentInCategory) < 0) {
+                budget.getAmount().compareTo(AllocatedInCategory) < 0) {
 
-            model.addAttribute("error", "Allocation cannot be less than already spent");
+            model.addAttribute("error", "Allocation cannot be less than already Allocated");
             model.addAttribute("budgets", existing);
             model.addAttribute("summary", buildSummary(month));
             model.addAttribute("totalBudget", totalBudgetLimit);
@@ -238,7 +238,7 @@ public class FinancialManagementPageController {
     @GetMapping("/report")
     public String report(Model model) {
         YearMonth now = YearMonth.now();
-        model.addAttribute("summary", buildSummary(now));
+        model.addAttribute("summary", buildSummary(now));   // <-- important
         model.addAttribute("budgets", budgets.findAll());
         model.addAttribute("currentPage", "report");
         return "report";

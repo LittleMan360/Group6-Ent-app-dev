@@ -8,8 +8,8 @@ public class DashboardSummary {
     public static class CategorySummary {
         private String category;
         private BigDecimal budget;       // allocation for this category
-        private BigDecimal spent;        // actual expenses in this category
-        private BigDecimal remaining;    // budget - spent
+        private BigDecimal Allocated;        // actual expenses in this category
+        private BigDecimal remaining;    // budget - Allocated
         private BigDecimal shareOfTotal; // % of total budget limit
 
         public String getCategory() { return category; }
@@ -18,8 +18,8 @@ public class DashboardSummary {
         public BigDecimal getBudget() { return budget; }
         public void setBudget(BigDecimal budget) { this.budget = budget; }
 
-        public BigDecimal getSpent() { return spent; }
-        public void setSpent(BigDecimal spent) { this.spent = spent; }
+        public BigDecimal getAllocated() { return Allocated; }
+        public void setAllocated(BigDecimal Allocated) { this.Allocated = Allocated; }
 
         public BigDecimal getRemaining() { return remaining; }
         public void setRemaining(BigDecimal remaining) { this.remaining = remaining; }
@@ -29,15 +29,15 @@ public class DashboardSummary {
     }
 
     private BigDecimal totalBudget;
-    private BigDecimal totalSpent;
+    private BigDecimal totalAllocated;
     private BigDecimal totalRemaining;
     private List<CategorySummary> categories;
 
     public BigDecimal getTotalBudget() { return totalBudget; }
     public void setTotalBudget(BigDecimal totalBudget) { this.totalBudget = totalBudget; }
 
-    public BigDecimal getTotalSpent() { return totalSpent; }
-    public void setTotalSpent(BigDecimal totalSpent) { this.totalSpent = totalSpent; }
+    public BigDecimal getTotalAllocated() { return totalAllocated; }
+    public void setTotalAllocated(BigDecimal totalAllocated) { this.totalAllocated = totalAllocated; }
 
     public BigDecimal getTotalRemaining() { return totalRemaining; }
     public void setTotalRemaining(BigDecimal totalRemaining) { this.totalRemaining = totalRemaining; }

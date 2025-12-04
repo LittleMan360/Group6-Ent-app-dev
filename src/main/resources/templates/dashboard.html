@@ -48,15 +48,9 @@
         <button type="submit" class="btn">Save Budget</button>
         <label>
         <input type="checkbox" name="override" />
-            Allow override if allocation is less than already spent
+            Allow override if allocation is less than already Allocated
         </label>
     </form>
-    <h2>Summary</h2>
-    <p>
-        Total Budget: <span th:text="${summary.totalBudget}"></span><br/>
-        Total Spent: <span th:text="${summary.totalSpent}"></span><br/>
-        Overall Remaining: <span th:text="${summary.totalRemaining}"></span>
-    </p>
     <h2>Saved Budgets</h2>
     <table>
     <thead>
