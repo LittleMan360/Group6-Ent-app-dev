@@ -35,7 +35,6 @@ public class FinancialManagementPageController {
         this.txns = txns;
     }
 
-    /* ======= Scenario 1.1 & 1.2: build dashboard summary ======= */
     private DashboardSummary buildSummary(YearMonth month) {
         List<Budget> allBudgets = budgets.findAll();
 
@@ -64,7 +63,7 @@ public class FinancialManagementPageController {
                         )
                 ));
 
-        // NEW: budgets grouped by category so multiple Entertainment rows combine
+        // budgets grouped by category so multiple rows combine
         Map<String, BigDecimal> budgetByCategory = allBudgets.stream()
                 .collect(Collectors.groupingBy(
                         b -> Optional.ofNullable(b.getCategory()).orElse("Uncategorized"),
@@ -114,7 +113,6 @@ public class FinancialManagementPageController {
 
     /* ======= Pages ======= */
 
-    // Dashboard page (Scenario 1.1 & 1.2)
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
         YearMonth now = YearMonth.now();
@@ -163,7 +161,6 @@ public class FinancialManagementPageController {
         return "redirect:/dashboard";
     }
 
-    /* ======= Scenario 1.3 & 1.4: save with validation ======= */
 
     @PostMapping("/saveBudget")
     public String saveBudget(
@@ -173,7 +170,6 @@ public class FinancialManagementPageController {
     ) {
         List<Budget> existing = budgets.findAll();
 
-        // ---- Scenario 1.3: allocations exceed total budget LIMIT ----
         BigDecimal newSum = existing.stream()
                 .filter(b -> b.getBudgetId() != budget.getBudgetId())
                 .map(Budget::getAmount)
@@ -190,7 +186,6 @@ public class FinancialManagementPageController {
             return "dashboard";
         }
 
-        // ---- Scenario 1.4: allocation < already Allocated (unless override) ----
         YearMonth month = YearMonth.now();
         LocalDate from = month.atDay(1);
         LocalDate to = month.atEndOfMonth();
@@ -224,7 +219,7 @@ public class FinancialManagementPageController {
             return "dashboard";
         }
 
-        // If we got here, all validations passed
+        // validations passed
         budgets.save(budget);
         return "redirect:/dashboard";
     }
