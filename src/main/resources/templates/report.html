@@ -5,129 +5,148 @@
     <title>Financial Report</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div th:replace="fragments/navbar :: navbar"></div>
+    <body>
+        <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<section class="container">
-    <h1>Financial Report</h1>
+        <section class="container">
+            <h1>Financial Report</h1>
 
-    <p>Here’s an overview of your saved budgets.</p>
+            <p>Here’s an overview of your saved budgets.</p>
 
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Start</th>
-            <th>End</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="b : ${budgets}">
-            <td th:text="${b.budgetId}"></td>
-            <td th:text="${b.budgetName}"></td>
-            <td th:text="${b.description}"></td>
-            <td th:text="${b.category}"></td>
-            <td th:text="${b.amount}"></td>
-            <td th:text="${b.startDate}"></td>
-            <td th:text="${b.endDate}"></td>
-        </tr>
-        </tbody>
-    </table>
+            <!-- Raw budget table -->
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Start</th>
+                    <th>End</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="b : ${budgets}">
+                    <td th:text="${b.budgetId}"></td>
+                    <td th:text="${b.budgetName}"></td>
+                    <td th:text="${b.description}"></td>
+                    <td th:text="${b.category}"></td>
+                    <td th:text="${b.amount}"></td>
+                    <td th:text="${b.startDate}"></td>
+                    <td th:text="${b.endDate}"></td>
+                </tr>
+                </tbody>
+            </table>
 
-    <h2>Budget Allocation (Pie Chart)</h2>
-    <table>
-        <h2>Summary</h2>
-        <p>
-            Total Budget: <span th:text="${summary.totalBudget}"></span><br/>
-            Total Allocated: <span th:text="${summary.totalAllocated}"></span><br/>
-            Overall Remaining: <span th:text="${summary.totalRemaining}"></span>
-        </p>
-        <canvas id="allocationPie" width="100" height="100"></canvas>
-    </table>
-    <h2>Category Breakdown</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Category</th>
-            <th>Budget</th>
-            <th>Allocated</th>
-            <th>Remaining</th>
-            <th>% of Total Budget</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="c : ${summary.categories}">
-            <td th:text="${c.category}"></td>
-            <td th:text="${c.budget}"></td>
-            <td th:text="${c.Allocated}"></td>
-            <td th:text="${c.remaining}"></td>
-            <td th:text="${c.shareOfTotal} + '%'"></td>
-        </tr>
-        </tbody>
-    </table>
+            <!-- Summary numbers -->
+            <h2>Summary</h2>
+            <p>
+                Total Budget: <span th:text="${summary.totalBudget}">0.00</span><br/>
+                Total Allocated: <span th:text="${summary.totalAllocated}">0.00</span><br/>
+                Overall Remaining: <span th:text="${summary.totalRemaining}">0.00</span>
+            </p>
 
-    <a href="/dashboard" class="btn">Back to Dashboard</a>
-</section>
+            <!-- Pie chart -->
+            <h2>Budget Allocation (Pie Chart)</h2>
+            <canvas id="allocationPie" width="400" height="400"></canvas>
 
-<!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <!-- Category breakdown (uses summary.categories) -->
+            <h2>Category Breakdown</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Budget</th>
+                    <th>Allocated</th>
+                    <th>Remaining</th>
+                    <th>% of Total Budget</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${summary.categories}">
+                    <td th:text="${c.category}">Category</td>
+                    <td th:text="${c.budget}">0.00</td>
+                    <td th:text="${c.allocated}">0.00</td>
+                    <td th:text="${c.remaining}">0.00</td>
+                    <td th:text="${c.shareOfTotal} + '%'">0%</td>
+                </tr>
+                </tbody>
+            </table>
 
-<!-- Thymeleaf + JS to build the pie chart -->
-<script th:inline="javascript">
-/*<![CDATA[*/
-    // Build labels from summary.categories
-    var categoryLabels = [
-    /*[# th:each="c : ${summary.categories}"]*/
-        /*[[${c.category}]]*/,
-    /*[/]*/
-    ];
+            <a href="/dashboard" class="btn">Back to Dashboard</a>
+        </section>
 
-    // Use shareOfTotal as the slice size (percentage)
-    var categoryData = [
-    /*[# th:each="c : ${summary.categories}"]*/
-        /*[[${c.shareOfTotal}]]*/,
-    /*[/]*/
-    ];
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    var totalBudget = /*[[${summary.totalBudget}]]*/ 0;
+    <script th:inline="javascript">
+        const ctx = document.getElementById('allocationPie').getContext('2d');
 
-    var ctx = document.getElementById('allocationPie').getContext('2d');
-    var allocationPie = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: categoryLabels,
-            datasets: [{
-                data: categoryData
-                // Chart.js will pick default colors
-            }]
-        },
-        options: {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            var label = context.label || '';
-                            var value = context.raw || 0;
-                            return label + ': ' + value.toFixed(1) + '%';
-                        }
-                    }
-                },
-                legend: {
-                    position: 'bottom'
-                },
-                title: {
-                    display: true,
-                    text: 'Allocation as % of Total Budget (' + totalBudget + ')'
-                }
+        // Category labels from the summary
+        const labels = [
+            /*[# th:each="c : ${summary.categories}"]*/
+            '[[${c.category}]]',
+            /*[/]*/
+        ];
+
+        // Category data as % of total budget (shareOfTotal is already a percent)
+        const data = [
+            /*[# th:each="c : ${summary.categories}"]*/
+            /*[[${c.shareOfTotal}]]*/,
+            /*[/]*/
+        ];
+
+        // Total budget and total remaining as raw numbers (BigDecimal -> JS number)
+        const totalBudget = /*[[${summary.totalBudget}]]*/ 0;
+        const totalRemaining = /*[[${summary.totalRemaining}]]*/ 0;
+
+        // Add an "Unallocated" slice based on remaining portion of total budget
+        let hasUnallocated = false;
+        if (totalBudget > 0 && totalRemaining > 0) {
+            const remainingShare = (totalRemaining / totalBudget) * 100; // convert to %
+            if (remainingShare > 0.01) { // ignore tiny rounding noise
+                labels.push('Unallocated');
+                data.push(remainingShare);
+                hasUnallocated = true;
             }
         }
-    });
-/*]]>*/
-</script>
 
-</body>
+        // Base colors for categories (cycled through)
+        const baseColors = [
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 205, 86, 0.8)',
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)'
+        ];
+
+        // Build color list; last slice is gray if it's the unallocated one
+        const backgroundColors = labels.map((label, idx) => {
+            if (hasUnallocated && idx === labels.length - 1) {
+                return 'rgba(128, 128, 128, 0.7)'; // gray for "unallocated"
+            }
+            return baseColors[idx % baseColors.length];
+        });
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Allocation as % of Total Budget (' + totalBudget + ')'
+                    }
+                }
+            }
+        });
+    </script>
+    </body>
 </html>

@@ -34,61 +34,59 @@ public class FinancialManagementPageController {
 
     /* ======= Scenario 1.1 & 1.2: build dashboard summary ======= */
     private DashboardSummary buildSummary(YearMonth month) {
-        // All saved budgets (categories + amounts)
         List<Budget> allBudgets = budgets.findAll();
 
-        // 1) Total Allocated (we are calling this "totalAllocated" in Scenario 1)
+        // totalAllocated = sum of all budget amounts (unchanged)
         BigDecimal totalAllocated = allBudgets.stream()
                 .map(Budget::getAmount)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 2) Total Budget = the limit the user set
         BigDecimal totalBudget = totalBudgetLimit;
-
-        // 3) Overall Remaining = limit - sum of budgets
         BigDecimal totalRemaining = totalBudget.subtract(totalAllocated);
 
-        // --- NEW: pull this month's transactions to compute per-category usage ---
         LocalDate from = month.atDay(1);
         LocalDate to = month.atEndOfMonth();
-
-        // only this user's txns, this month
         List<Txn> monthTxns = txns.listForUserBetween(DEMO_USER, from, to);
 
-        // Treat any NEGATIVE amount as an EXPENSE and group by category
-        Map<String, BigDecimal> AllocatedByCategory = monthTxns.stream()
-                .filter(t -> t.getAmount() != null
-                        && t.getAmount().compareTo(BigDecimal.ZERO) < 0)
+        // EXPENSES grouped by category (what’s actually been used)
+        Map<String, BigDecimal> allocatedByCategory = monthTxns.stream()
+                .filter(t -> t.getAmount() != null && t.getAmount().compareTo(BigDecimal.ZERO) < 0)
                 .collect(Collectors.groupingBy(
                         Txn::getCategory,
                         Collectors.reducing(
                                 BigDecimal.ZERO,
-                                t -> t.getAmount().negate(), // -50 -> +50 Allocated
-                                BigDecimal::add)
+                                t -> t.getAmount().negate(),   // -50 -> +50
+                                BigDecimal::add
+                        )
                 ));
 
-        // Per-category section:
-        //  - budget = allocation (limit for that category)
-        //  - Allocated = actual expenses for that category (from Txns)
-        //  - remaining = budget - Allocated
-        //  - shareOfTotal = budget / totalBudgetLimit * 100
+        // NEW: budgets grouped by category so multiple Entertainment rows combine
+        Map<String, BigDecimal> budgetByCategory = allBudgets.stream()
+                .collect(Collectors.groupingBy(
+                        b -> Optional.ofNullable(b.getCategory()).orElse("Uncategorized"),
+                        Collectors.reducing(
+                                BigDecimal.ZERO,
+                                b -> Optional.ofNullable(b.getAmount()).orElse(BigDecimal.ZERO),
+                                BigDecimal::add
+                        )
+                ));
+
         List<DashboardSummary.CategorySummary> cats = new ArrayList<>();
-        for (Budget b : allBudgets) {
+
+        for (Map.Entry<String, BigDecimal> entry : budgetByCategory.entrySet()) {
+            String category = entry.getKey();
+            BigDecimal budgetAmount = entry.getValue();
+
+            BigDecimal allocated = allocatedByCategory.getOrDefault(category, BigDecimal.ZERO);
+            BigDecimal remaining = budgetAmount.subtract(allocated);
+
             DashboardSummary.CategorySummary cs = new DashboardSummary.CategorySummary();
-            cs.setCategory(b.getCategory());
-
-            BigDecimal budgetAmount =
-                    Optional.ofNullable(b.getAmount()).orElse(BigDecimal.ZERO);
-
-            BigDecimal Allocated = AllocatedByCategory.getOrDefault(b.getCategory(), BigDecimal.ZERO);
-            BigDecimal remaining = budgetAmount.subtract(Allocated);
-
+            cs.setCategory(category);
             cs.setBudget(budgetAmount);
-            cs.setAllocated(Allocated);
+            cs.setAllocated(allocated);
             cs.setRemaining(remaining);
 
-            // How much of the total budget limit this category gets, in %
             BigDecimal share = BigDecimal.ZERO;
             if (totalBudget.compareTo(BigDecimal.ZERO) > 0) {
                 share = budgetAmount
@@ -101,14 +99,13 @@ public class FinancialManagementPageController {
         }
 
         DashboardSummary summary = new DashboardSummary();
-        summary.setTotalBudget(totalBudget);           // total monthly budget limit
-        summary.setTotalAllocated(totalAllocated);         // sum of category allocations (Scenario 1 meaning)
-        summary.setTotalRemaining(totalRemaining);     // leftover unallocated money
+        summary.setTotalBudget(totalBudget);
+        summary.setTotalAllocated(totalAllocated);
+        summary.setTotalRemaining(totalRemaining);
         summary.setCategories(cats);
 
         return summary;
     }
-
 
 
 
@@ -238,7 +235,7 @@ public class FinancialManagementPageController {
     @GetMapping("/report")
     public String report(Model model) {
         YearMonth now = YearMonth.now();
-        model.addAttribute("summary", buildSummary(now));   // <-- important
+        model.addAttribute("summary", buildSummary(now));
         model.addAttribute("budgets", budgets.findAll());
         model.addAttribute("currentPage", "report");
         return "report";
