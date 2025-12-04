@@ -1,7 +1,9 @@
 package com.enterprisefinancialmanagement.financialmanagespring.dao;
+
 import com.enterprisefinancialmanagement.financialmanagespring.domain.Txn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +16,9 @@ public class InMemoryTxnDao implements TxnDao {
 
     @Override
     public Txn save(Txn txn) {
-        if (txn.getId() == null) txn.setId(UUID.randomUUID());
+        if (txn.getId() == null) {
+            txn.setId(UUID.randomUUID());
+        }
         store.put(txn.getId(), txn);
         return txn;
     }
@@ -49,3 +53,4 @@ public class InMemoryTxnDao implements TxnDao {
         store.remove(id);
     }
 }
+

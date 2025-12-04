@@ -16,12 +16,14 @@ public class BudgetServiceImpl implements IBudgetService {
 
     @Override
     public List<Budget> findAll() {
-        return new ArrayList<>(store.values());
+        List<Budget> list = new ArrayList<>(store.values());
+        list.sort(Comparator.comparingInt(Budget::getBudgetId));
+        return list;
     }
 
     @Override
     public Budget findById(int id) {
-        return store.get(id); // <- must NOT always return null
+        return store.get(id);
     }
 
     @Override

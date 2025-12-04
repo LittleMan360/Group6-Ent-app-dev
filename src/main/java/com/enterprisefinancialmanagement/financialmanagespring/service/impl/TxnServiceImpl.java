@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TxnServiceImpl implements TxnService {
@@ -21,10 +22,13 @@ public class TxnServiceImpl implements TxnService {
 
     @Override
     @Transactional
-    public Txn addExpense(UUID userId, BigDecimal amount, String category, LocalDate date, String note) {
+    public Txn addExpense(UUID userId, BigDecimal amount, String category,
+                          LocalDate date, String note) {
+
         Txn t = new Txn();
         t.setUserId(userId);
-        t.setAmount(amount.abs().negate()); // expenses negative
+        // store expenses as negative
+        t.setAmount(amount == null ? BigDecimal.ZERO : amount.abs().negate());
         t.setType(Txn.Type.EXPENSE);
         t.setCategory(category);
         t.setDate(date != null ? date : LocalDate.now());
@@ -34,10 +38,13 @@ public class TxnServiceImpl implements TxnService {
 
     @Override
     @Transactional
-    public Txn addIncome(UUID userId, BigDecimal amount, String source, LocalDate date, String note) {
+    public Txn addIncome(UUID userId, BigDecimal amount, String source,
+                         LocalDate date, String note) {
+
         Txn t = new Txn();
         t.setUserId(userId);
-        t.setAmount(amount.abs()); // income positive
+        // store income as positive
+        t.setAmount(amount == null ? BigDecimal.ZERO : amount.abs());
         t.setType(Txn.Type.INCOME);
         t.setCategory(source);
         t.setDate(date != null ? date : LocalDate.now());
@@ -45,12 +52,26 @@ public class TxnServiceImpl implements TxnService {
         return txns.save(t);
     }
 
-    @Override public List<Txn> listForUser(UUID userId) { return txns.findByUser(userId); }
-    @Override public List<Txn> listForUserBetween(UUID userId, LocalDate from, LocalDate to) { return txns.findByUserAndDateRange(userId, from, to); }
-    @Override public BigDecimal getNetForUserBetween(UUID userId, LocalDate from, LocalDate to) {
+    @Override
+    public List<Txn> listForUser(UUID userId) {
+        return txns.findByUser(userId);
+    }
+
+    @Override
+    public List<Txn> listForUserBetween(UUID userId, LocalDate from, LocalDate to) {
+        return txns.findByUserAndDateRange(userId, from, to);
+    }
+
+    @Override
+    public BigDecimal getNetForUserBetween(UUID userId, LocalDate from, LocalDate to) {
         return listForUserBetween(userId, from, to).stream()
                 .map(Txn::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-    @Override @Transactional public void delete(UUID txnId) { txns.delete(txnId); }
+
+    @Override
+    @Transactional
+    public void delete(UUID txnId) {
+        txns.delete(txnId);
+    }
 }

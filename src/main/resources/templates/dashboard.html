@@ -10,6 +10,19 @@
 
 <section class="container">
     <h1>Dashboard</h1>
+    
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    
+    <form th:action="@{/setBudgetLimit}" method="post" class="form" style="margin-bottom: 1rem;">
+        <label>Total Budget Limit:</label>
+        <input type="number"
+               name="totalBudget"
+               step="0.01"
+               th:value="${totalBudget}"
+               placeholder="Enter total budget (e.g. 2000.00)"
+               required>
+        <button type="submit" class="btn">Set Limit</button>
+    </form>
 
     <form th:action="@{/saveBudget}" th:object="${specimen}" method="post" class="form">
         <input type="hidden" th:field="*{budgetId}" />
@@ -33,32 +46,41 @@
         <input type="date" th:field="*{endDate}">
 
         <button type="submit" class="btn">Save Budget</button>
+        <label>
+        <input type="checkbox" name="override" />
+            Allow override if allocation is less than already spent
+        </label>
     </form>
-
+    <h2>Summary</h2>
+    <p>
+        Total Budget: <span th:text="${summary.totalBudget}"></span><br/>
+        Total Spent: <span th:text="${summary.totalSpent}"></span><br/>
+        Overall Remaining: <span th:text="${summary.totalRemaining}"></span>
+    </p>
     <h2>Saved Budgets</h2>
     <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="b : ${budgets}">
-            <td th:text="${b.budgetId}"></td>
-            <td th:text="${b.budgetName}"></td>
-            <td th:text="${b.description}"></td>
-            <td th:text="${b.category}"></td>
-            <td th:text="${b.amount}"></td>
-            <td th:text="${b.startDate}"></td>
-            <td th:text="${b.endDate}"></td>
-            <td>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="b : ${budgets}">
+        <td th:text="${b.budgetId}"></td>
+        <td th:text="${b.budgetName}"></td>
+        <td th:text="${b.description}"></td>
+        <td th:text="${b.category}"></td>
+        <td th:text="${b.amount}"></td>
+        <td th:text="${b.startDate}"></td>
+        <td th:text="${b.endDate}"></td>
+        <td>
                 <a th:href="@{|/budget/${b.budgetId}/edit|}" class="btn btn-sm btn-secondary">
                     Edit
                 </a>
@@ -69,9 +91,9 @@
                     </button>
                 </form>
             </td>
-        </tr>
-        </tbody>
-    </table>
+    </tr>
+    </tbody>
+</table>
 </section>
 
 </body>
