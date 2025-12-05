@@ -5,41 +5,148 @@
     <title>Financial Report</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div th:replace="fragments/navbar :: navbar"></div>
+    <body>
+        <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<section class="container">
-    <h1>Financial Report</h1>
+        <section class="container">
+            <h1>Financial Report</h1>
 
-    <p>Here’s an overview of your saved budgets.</p>
+            <p>Here’s an overview of your saved budgets.</p>
 
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Start</th>
-            <th>End</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="b : ${budgets}">
-            <td th:text="${b.budgetId}"></td>
-            <td th:text="${b.budgetName}"></td>
-            <td th:text="${b.description}"></td>
-            <td th:text="${b.category}"></td>
-            <td th:text="${b.amount}"></td>
-            <td th:text="${b.startDate}"></td>
-            <td th:text="${b.endDate}"></td>
-        </tr>
-        </tbody>
-    </table>
+            <!-- Raw budget table -->
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Start</th>
+                    <th>End</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="b : ${budgets}">
+                    <td th:text="${b.budgetId}"></td>
+                    <td th:text="${b.budgetName}"></td>
+                    <td th:text="${b.description}"></td>
+                    <td th:text="${b.category}"></td>
+                    <td th:text="${b.amount}"></td>
+                    <td th:text="${b.startDate}"></td>
+                    <td th:text="${b.endDate}"></td>
+                </tr>
+                </tbody>
+            </table>
 
-    <a href="/dashboard" class="btn">Back to Dashboard</a>
-</section>
+            <!-- Summary numbers -->
+            <h2>Summary</h2>
+            <p>
+                Total Budget: <span th:text="${summary.totalBudget}">0.00</span><br/>
+                Total Allocated: <span th:text="${summary.totalAllocated}">0.00</span><br/>
+                Overall Remaining: <span th:text="${summary.totalRemaining}">0.00</span>
+            </p>
 
-</body>
+            <!-- Pie chart -->
+            <h2>Budget Allocation (Pie Chart)</h2>
+            <canvas id="allocationPie" width="400" height="400"></canvas>
+
+            <!-- Category breakdown (uses summary.categories) -->
+            <h2>Category Breakdown</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Budget</th>
+                    <th>Spent</th>
+                    <th>Remaining</th>
+                    <th>% of Total Budget</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${summary.categories}">
+                    <td th:text="${c.category}">Category</td>
+                    <td th:text="${c.budget}">0.00</td>
+                    <td th:text="${c.allocated}">0.00</td>
+                    <td th:text="${c.remaining}">0.00</td>
+                    <td th:text="${c.shareOfTotal} + '%'">0%</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <a href="/dashboard" class="btn">Back to Dashboard</a>
+        </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script th:inline="javascript">
+        const ctx = document.getElementById('allocationPie').getContext('2d');
+
+        // Category labels from the summary
+        const labels = [
+            /*[# th:each="c : ${summary.categories}"]*/
+            '[[${c.category}]]',
+            /*[/]*/
+        ];
+
+        // Category data as % of total budget (shareOfTotal is already a percent)
+        const data = [
+            /*[# th:each="c : ${summary.categories}"]*/
+            /*[[${c.shareOfTotal}]]*/,
+            /*[/]*/
+        ];
+
+        // Total budget and total remaining as raw numbers (BigDecimal -> JS number)
+        const totalBudget = /*[[${summary.totalBudget}]]*/ 0;
+        const totalRemaining = /*[[${summary.totalRemaining}]]*/ 0;
+
+        // Add an "Unallocated" slice based on remaining portion of total budget
+        let hasUnallocated = false;
+        if (totalBudget > 0 && totalRemaining > 0) {
+            const remainingShare = (totalRemaining / totalBudget) * 100; // convert to %
+            if (remainingShare > 0.01) { 
+                labels.push('Unallocated');
+                data.push(remainingShare);
+                hasUnallocated = true;
+            }
+        }
+
+        // Base colors for categories (cycled through)
+        const baseColors = [
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 205, 86, 0.8)',
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)'
+        ];
+
+        // Build color list; last slice is gray if it's the unallocated one
+        const backgroundColors = labels.map((label, idx) => {
+            if (hasUnallocated && idx === labels.length - 1) {
+                return 'rgba(128, 128, 128, 0.7)'; // gray for "unallocated"
+            }
+            return baseColors[idx % baseColors.length];
+        });
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Allocation as % of Total Budget (' + totalBudget + ')'
+                    }
+                }
+            }
+        });
+    </script>
+    </body>
 </html>

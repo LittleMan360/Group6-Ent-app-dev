@@ -7,6 +7,12 @@ import java.util.UUID;
 
 @Entity
 public class Txn {
+
+    public enum Type {
+        INCOME,
+        EXPENSE
+    }
+
     @Id
     @GeneratedValue
     private UUID id;
@@ -15,19 +21,19 @@ public class Txn {
     private UUID userId;
 
     @Column(nullable = false)
-    private BigDecimal amount;  // income = positive, expense = negative
+    private BigDecimal amount;     // income positive, expenses negative
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Type type;  // INCOME or EXPENSE
+    private Type type;
 
-    private String category;    // e.g., "Groceries" or "Paycheck"
-    private LocalDate date;     // transaction date
-    private String note;        // optional memo
+    @Column(nullable = false)
+    private String category;
 
-    public enum Type { INCOME, EXPENSE }
+    private LocalDate date;
 
-    // --- Getters and Setters ---
+    private String note;
+
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
 
