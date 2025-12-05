@@ -58,7 +58,7 @@
                 <tr>
                     <th>Category</th>
                     <th>Budget</th>
-                    <th>Allocated</th>
+                    <th>Spent</th>
                     <th>Remaining</th>
                     <th>% of Total Budget</th>
                 </tr>
@@ -104,7 +104,7 @@
         let hasUnallocated = false;
         if (totalBudget > 0 && totalRemaining > 0) {
             const remainingShare = (totalRemaining / totalBudget) * 100; // convert to %
-            if (remainingShare > 0.01) { // ignore tiny rounding noise
+            if (remainingShare > 0.01) { 
                 labels.push('Unallocated');
                 data.push(remainingShare);
                 hasUnallocated = true;

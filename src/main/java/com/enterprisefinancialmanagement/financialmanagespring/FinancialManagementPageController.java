@@ -5,6 +5,8 @@ import com.enterprisefinancialmanagement.financialmanagespring.dto.Budget;
 import com.enterprisefinancialmanagement.financialmanagespring.dto.DashboardSummary;
 import com.enterprisefinancialmanagement.financialmanagespring.service.IBudgetService;
 import com.enterprisefinancialmanagement.financialmanagespring.service.TxnService;
+import com.enterprisefinancialmanagement.financialmanagespring.dto.MonthlySpendingForm;
+import com.enterprisefinancialmanagement.financialmanagespring.dto.MonthlySpendingRow;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -32,7 +35,6 @@ public class FinancialManagementPageController {
         this.txns = txns;
     }
 
-    /* ======= Scenario 1.1 & 1.2: build dashboard summary ======= */
     private DashboardSummary buildSummary(YearMonth month) {
         List<Budget> allBudgets = budgets.findAll();
 
@@ -61,7 +63,7 @@ public class FinancialManagementPageController {
                         )
                 ));
 
-        // NEW: budgets grouped by category so multiple Entertainment rows combine
+        // budgets grouped by category so multiple rows combine
         Map<String, BigDecimal> budgetByCategory = allBudgets.stream()
                 .collect(Collectors.groupingBy(
                         b -> Optional.ofNullable(b.getCategory()).orElse("Uncategorized"),
@@ -111,7 +113,6 @@ public class FinancialManagementPageController {
 
     /* ======= Pages ======= */
 
-    // Dashboard page (Scenario 1.1 & 1.2)
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
         YearMonth now = YearMonth.now();
@@ -160,7 +161,6 @@ public class FinancialManagementPageController {
         return "redirect:/dashboard";
     }
 
-    /* ======= Scenario 1.3 & 1.4: save with validation ======= */
 
     @PostMapping("/saveBudget")
     public String saveBudget(
@@ -170,7 +170,6 @@ public class FinancialManagementPageController {
     ) {
         List<Budget> existing = budgets.findAll();
 
-        // ---- Scenario 1.3: allocations exceed total budget LIMIT ----
         BigDecimal newSum = existing.stream()
                 .filter(b -> b.getBudgetId() != budget.getBudgetId())
                 .map(Budget::getAmount)
@@ -187,7 +186,6 @@ public class FinancialManagementPageController {
             return "dashboard";
         }
 
-        // ---- Scenario 1.4: allocation < already Allocated (unless override) ----
         YearMonth month = YearMonth.now();
         LocalDate from = month.atDay(1);
         LocalDate to = month.atEndOfMonth();
@@ -221,7 +219,7 @@ public class FinancialManagementPageController {
             return "dashboard";
         }
 
-        // If we got here, all validations passed
+        // validations passed
         budgets.save(budget);
         return "redirect:/dashboard";
     }
@@ -246,4 +244,92 @@ public class FinancialManagementPageController {
         model.addAttribute("currentPage", "getstarted");
         return "getstarted"; // getstarted.html
     }
+
+    @GetMapping("/monthly-spending")
+        public String monthlySpending(
+                @RequestParam(required = false) String month,
+                Model model) {
+
+            model.addAttribute("currentPage", "monthly-spending");
+
+            YearMonth ym = (month == null || month.isBlank())
+                    ? YearMonth.now()
+                    : YearMonth.parse(month);
+
+            DashboardSummary summary = buildSummary(ym);
+
+            LocalDate from = ym.atDay(1);
+            LocalDate to = ym.atEndOfMonth();
+
+            // Group existing transactions (EXPENSE only)
+            Map<String, BigDecimal> spentMap = txns.listForUserBetween(DEMO_USER, from, to).stream()
+                    .filter(t -> t.getType() == Txn.Type.EXPENSE)
+                    .collect(Collectors.groupingBy(
+                            Txn::getCategory,
+                            Collectors.reducing(BigDecimal.ZERO,
+                                    t -> t.getAmount().abs(),
+                                    BigDecimal::add)
+                    ));
+
+            MonthlySpendingForm form = new MonthlySpendingForm();
+
+            for (DashboardSummary.CategorySummary cs : summary.getCategories()) {
+                MonthlySpendingRow row = new MonthlySpendingRow();
+                row.setCategory(cs.getCategory());
+                row.setBudget(cs.getBudget());
+                row.setSpent(spentMap.getOrDefault(cs.getCategory(), BigDecimal.ZERO));
+                form.getRows().add(row);
+            }
+
+            model.addAttribute("form", form);
+            model.addAttribute("summary", summary);
+            model.addAttribute("selectedMonth", ym.toString());
+            model.addAttribute("monthLabel",
+                    ym.getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.US)
+                            + " " + ym.getYear());
+
+            return "monthly-spending";
+        }
+
+
+        @PostMapping("/monthly-spending")
+        public String saveMonthlySpending(
+                @RequestParam("month") String monthString,
+                @ModelAttribute("form") MonthlySpendingForm form) {
+
+            YearMonth ym = YearMonth.parse(monthString);
+            LocalDate from = ym.atDay(1);
+            LocalDate to = ym.atEndOfMonth();
+
+            // For each category row submitted
+            for (MonthlySpendingRow row : form.getRows()) {
+
+                String category = row.getCategory();
+                BigDecimal desired = row.getSpent() == null ? BigDecimal.ZERO : row.getSpent();
+
+                // Find current actual spending
+                BigDecimal current = txns.listForUserBetween(DEMO_USER, from, to).stream()
+                        .filter(t -> t.getType() == Txn.Type.EXPENSE)
+                        .filter(t -> category.equalsIgnoreCase(t.getCategory()))
+                        .map(t -> t.getAmount().abs())
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                // If user wants more spent than currently exists, create new transaction(s)
+                if (desired.compareTo(current) > 0) {
+                    BigDecimal diff = desired.subtract(current); // how much new spending to record
+
+                    // Use the existing service method that already knows how to build a Txn
+                    txns.addExpense(
+                            DEMO_USER,
+                            diff,                   // positive; service will make it negative
+                            category,
+                            to,                     // use end of month as the date
+                            "Monthly spending update"
+                    );
+                }
+            }
+
+            return "redirect:/monthly-spending?month=" + monthString;
+        }
+
 }
